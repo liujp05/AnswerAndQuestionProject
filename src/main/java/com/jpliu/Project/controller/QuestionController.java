@@ -1,5 +1,8 @@
 package com.jpliu.Project.controller;
 
+import com.jpliu.Project.async.EventModel;
+import com.jpliu.Project.async.EventProducer;
+import com.jpliu.Project.async.EventType;
 import com.jpliu.Project.model.*;
 import com.jpliu.Project.service.*;
 import org.slf4j.Logger;
@@ -40,6 +43,9 @@ public class QuestionController {
     @Autowired
     private FollowService followService;
 
+    @Autowired
+    private EventProducer eventProducer;
+
     @RequestMapping(value = "/question/add", method = {RequestMethod.POST})
     @ResponseBody
     public String addQuestion(@RequestParam("title") String title,
@@ -57,6 +63,10 @@ public class QuestionController {
                 question.setUserId(hostHolder.getUser().getId());
             }
             if (questionService.addQuestion(question) > 0) {
+                //当增加题目成功之后， 增加一个事件出来
+                eventProducer.fileEvent(new EventModel(EventType.ADD_QUESTION)
+                .setActorId(question.getUserId()).setEntityId(question.getId())
+                .setExt("title", question.getTitle()).setExt("content", question.getContent()));
                 return MD5Util.getJSONString(0);
             }
         } catch (Exception e) {

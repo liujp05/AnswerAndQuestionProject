@@ -13,12 +13,12 @@ public class LogAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
 
-    @Before("execution(* com.jpliu.NewcoderDemo.controller.IndexController.*(..))")
+    @Before("execution(* com.jpliu.Project.controller.IndexController.*(..))")
     public void beforeMethod() {
         logger.info("before method");
     }
 
-    @After("execution(* com.jpliu.NewcoderDemo.controller.IndexController.*(..))")
+    @After("execution(* com.jpliu.Project.controller.IndexController.*(..))")
     public void afterMethod() {
         logger.info("after method");
     }
